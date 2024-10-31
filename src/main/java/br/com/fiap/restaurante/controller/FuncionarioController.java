@@ -1,14 +1,19 @@
 package br.com.fiap.restaurante.controller;
 
-import br.com.fiap.restaurante.model.Funcionario;
-import br.com.fiap.restaurante.model.FuncionarioDAO;
-import br.com.fiap.restaurante.service.FuncionarioService;
-import br.com.fiap.restaurante.exceptions.FuncionarioException;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.List;
+
+import br.com.fiap.restaurante.exceptions.FuncionarioException;
+import br.com.fiap.restaurante.model.Funcionario;
+import br.com.fiap.restaurante.services.FuncionarioService;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path("/funcionarios") 
 public class FuncionarioController {
