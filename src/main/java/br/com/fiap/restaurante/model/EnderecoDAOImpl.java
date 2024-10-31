@@ -70,7 +70,7 @@ public class EnderecoDAOImpl implements EnderecoDAO {
 
 	                try (ResultSet rs = stmtSelect.executeQuery()) {
 	                    if (rs.next()) {
-	                        long id = rs.getLong("id");
+	                        int id = rs.getInt("id");
 	                        endereco.setId(id); 
 	                        System.out.println("ID do endereço: " + id);
 	                    }
