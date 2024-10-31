@@ -2,29 +2,33 @@ package br.com.fiap.restaurante.model;
 
 public class Cliente {
 	
-	/**
-	 * Definindo campos da classe Cliente
-	 */
+	private int id;  // Campo ID adicionado
 	private String nome;
-	private Endereco endereco;
 	private String email; 
+	private String telefone; // Novo campo telefone
+	private Endereco endereco;
 
-	
-	/**
-	 * Construtor
-	 * @param nome
-	 */
-	public Cliente(String nome, String email, Endereco endereco) {
-		super();
+	public Cliente(int id, String nome, String email, String telefone, Endereco endereco) {
+		this.id = id; 
 		this.nome = nome;
-		this.endereco = endereco;
 		this.email = email;
+		this.telefone = telefone;
+		this.endereco = endereco;
 	}
 
-	/**
-	 * GET E SET
-	 * @return
-	 */
+	public Cliente() {
+		// TODO Auto-generated constructor stub
+	}
+
+	// Getters e Setters
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getNome() {
 		return nome;
 	}
@@ -32,15 +36,7 @@ public class Cliente {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	public Endereco getEndereco() {
-		return endereco;
-	}
 
-	public void setEndereco(Endereco endereco) {
-		this.endereco = endereco;
-	}
-	
 	public String getEmail() {
 		return email;
 	}
@@ -49,15 +45,24 @@ public class Cliente {
 		this.email = email;
 	}
 
-	
-	/**
-	 * Apresenta informações sobre o Cliente
-	 */
-	public void apresentarCliente() {
-		System.out.println("Cliente: " + this.nome + ", Endereço: " + this.getEndereco() + ", Email: "+ this.getEmail());
+	public String getTelefone() {
+		return telefone;
 	}
 
-	
-	
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
 
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+
+	// Método para apresentação do cliente
+	public void apresentarCliente() {
+		System.out.println("ID: " + this.id + " | Cliente: " + this.nome + " | Email: "+ this.email + " | Telefone: " + this.telefone + " | Endereço: " + this.getEndereco());
+	}
 }
