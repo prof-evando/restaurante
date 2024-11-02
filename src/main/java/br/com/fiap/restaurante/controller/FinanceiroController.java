@@ -8,12 +8,14 @@ import br.com.fiap.restaurante.model.Financeiro;
 import br.com.fiap.restaurante.model.FinanceiroDAOImpl;
 import br.com.fiap.restaurante.services.FinanceiroService;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -44,7 +46,10 @@ public class FinanceiroController {
     @Path("/pagamentoPresencial")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registrarTransacao(double valorPagamento, Integer codPedido, String metodoPagamento, String observacoes) {
+    public Response registrarTransacao(@QueryParam("valorPagamento") double valorPagamento, 
+    		                           @QueryParam("codPedido")Integer codPedido, 
+    		                           @QueryParam("metodoPagamento")String metodoPagamento,
+    		                           @QueryParam("observacoes")String observacoes) {
         try {
 
             EnumFinanceiro.MetodoPagamento metodoPagamentoEnum = EnumFinanceiro.MetodoPagamento.fromCodigo(metodoPagamento);
@@ -59,7 +64,10 @@ public class FinanceiroController {
     @Path("/aguardarDelivery")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response aguardarPagamentoDelivery(Integer codPedido, String metodoPagamento, Integer idCliente, String observacoes) {
+    public Response aguardarPagamentoDelivery(@QueryParam("codPedido") Integer codPedido, 
+    		                                  @QueryParam("metodoPagamento")String metodoPagamento, 
+    		                                  @QueryParam("idCliente")Integer idCliente, 
+    		                                  @QueryParam("observacoes") String observacoes) {
         try {
             EnumFinanceiro.MetodoPagamento metodoPagamentoEnum = EnumFinanceiro.MetodoPagamento.fromCodigo(metodoPagamento);
             financeiroService.aguardarPagamentoDelivery(codPedido, metodoPagamentoEnum, idCliente,observacoes);
@@ -73,7 +81,9 @@ public class FinanceiroController {
     @Path("/finalizarDelivery")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response finalizarPagamentoDelivery(double valorPagamento, Integer codPedido, String observacoes) {
+    public Response finalizarPagamentoDelivery(@QueryParam("valorPagamento") double valorPagamento, 
+    											@QueryParam("codPedido") Integer codPedido, 
+    											@QueryParam("observacoes")String observacoes) {
         try {
             financeiroService.finalizarPagamentoDelivery(valorPagamento, codPedido, observacoes);
             return Response.ok("Transação atualizada com sucesso.").build();
@@ -86,7 +96,8 @@ public class FinanceiroController {
     @Path("/cancelarDelivery")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response cancelarPagamentoDelivery(Integer codPedido, String observacoes) {
+    public Response cancelarPagamentoDelivery(@QueryParam("codPedido") Integer codPedido, 
+    											@QueryParam("observacoes")String observacoes) {
         try {
             financeiroService.cancelarPagamentoDelivery(codPedido, observacoes);
             return Response.ok("Transação atualizada com sucesso.").build();
