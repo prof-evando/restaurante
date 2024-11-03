@@ -18,7 +18,7 @@ public class FuncionarioDAO {
     }
 
     public void cadastrar(Funcionario funcionario) throws FuncionarioException {
-        String sql = "INSERT INTO funcionarios (nome, cpf, cargo, salario) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO funcionario (nome, cpf, cargo, salario) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, funcionario.getNome());
             stmt.setString(2, funcionario.getCpf());
@@ -31,7 +31,7 @@ public class FuncionarioDAO {
     }
 
     public Funcionario consultarPorNome(String nome) throws FuncionarioException {
-        String sql = "SELECT * FROM funcionarios WHERE nome = ?";
+        String sql = "SELECT * FROM funcionario WHERE nome = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, nome);
             ResultSet rs = stmt.executeQuery();
@@ -52,7 +52,7 @@ public class FuncionarioDAO {
 
     public List<Funcionario> listarTodos() {
         List<Funcionario> funcionarios = new ArrayList<>();
-        String sql = "SELECT * FROM funcionarios";
+        String sql = "SELECT * FROM funcionario";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -71,7 +71,7 @@ public class FuncionarioDAO {
     }
 
     public void atualizar(Funcionario funcionario) throws FuncionarioException {
-        String sql = "UPDATE funcionarios SET cpf = ?, cargo = ?, salario = ? WHERE nome = ?";
+        String sql = "UPDATE funcionario SET cpf = ?, cargo = ?, salario = ? WHERE nome = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, funcionario.getCpf());
             stmt.setString(2, funcionario.getCargo());
