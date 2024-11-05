@@ -3,24 +3,16 @@ CREATE TABLE ENDERECO (
     cidade VARCHAR2(30) NOT NULL,
     bairro VARCHAR2(30) NOT NULL,
     cep VARCHAR2(30) NOT NULL,
-    CONSTRAINT pk_endereco_id PRIMARY KEY(id) -- Nome único para a constraint
+    CONSTRAINT pk_endereco_id PRIMARY KEY(id) -- Nome ï¿½nico para a constraint
 );
 
 CREATE TABLE ESTABELECIMENTO (
-    endereco_Id NUMBER NOT NULL, -- Deve ser NOT NULL pois é uma chave estrangeira
-    nome VARCHAR2(50) NOT NULL, -- Ajustado para um tamanho maior, se necessário
+    endereco_Id NUMBER NOT NULL, -- Deve ser NOT NULL pois ï¿½ uma chave estrangeira
+    nome VARCHAR2(50) NOT NULL, -- Ajustado para um tamanho maior, se necessï¿½rio
     tel VARCHAR2(20) NOT NULL,
     CONSTRAINT pk_estabelecimento_nome PRIMARY KEY(nome),
     CONSTRAINT fk_endereco_estabelecimento
     FOREIGN KEY (endereco_Id) REFERENCES ENDERECO(id) -- Nome da foreign key
-);
-
-CREATE TABLE CLIENTE (
-     endereco_Id NUMBER NOT NULL, -- Deve ser NOT NULL pois é uma chave estrangeira
-     email VARCHAR2(120) NOT NULL,
-     nome VARCHAR2(50) NOT NULL, -- Ajustado para um tamanho maior, se necessário
-     CONSTRAINT pk_cliente_email PRIMARY KEY(email),
-     FOREIGN KEY (endereco_Id) REFERENCES ENDERECO(id) -- Nome da foreign key
 );
 
 CREATE TABLE MOTOBOY (
