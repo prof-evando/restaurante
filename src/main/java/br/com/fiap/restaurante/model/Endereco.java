@@ -1,32 +1,35 @@
 package br.com.fiap.restaurante.model;
 
-public class Endereco{
+public class Endereco {
 
     /**
      * Campos da classe endereço
      */
-	
-	private int id; 
+    private int id; 
     private String cidade;
     private String bairro;
     private String cep;
 
     /**
-     * Construtor
+     * Construtor padrão
+     */
+    public Endereco() {
+    }
+
+    /**
+     * Construtor com parâmetros
      * @param cidade
      * @param bairro
      * @param cep
      */
     public Endereco(String cidade, String bairro, String cep) {
-        super();
         this.cidade = cidade;
         this.bairro = bairro;
         this.cep = cep;
     }
 
     /**
-     * GET E SET
-     * @return
+     * GET e SET
      */
     public String getCidade() {
         return cidade;
@@ -52,6 +55,14 @@ public class Endereco{
         this.cep = cep;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     /**
      * Sobrescreve o método toString para apresentar o endereço corretamente
      */
@@ -59,12 +70,4 @@ public class Endereco{
     public String toString() {
         return "Cidade: " + this.cidade + ", Bairro: " + this.bairro + ", CEP: " + this.cep;
     }
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 }
