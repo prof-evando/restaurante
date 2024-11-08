@@ -1,7 +1,17 @@
 package br.com.fiap.restaurante.model;
 
 public class Financeiro {
-
+	
+	private Integer idTrasacao;
+    private Integer idPedido;
+    private Integer idCliente;
+    private String dataHora;
+    private double valorPagamento;
+    private String metodoPagamento;
+    private String statusPagamento;
+    private String tipoPedido;
+    private String observacoes;
+	
     public Integer getIdTrasacao() {
 		return idTrasacao;
 	}
@@ -34,12 +44,12 @@ public class Financeiro {
 		this.dataHora = dataHora;
 	}
 
-	public double getValorTotal() {
-		return valorTotal;
+	public double getValorPagamento() {
+		return valorPagamento;
 	}
 
-	public void setValorTotal(double valorTotal) {
-		this.valorTotal = valorTotal;
+	public void setValorPagamento(double valorTotal) {
+		this.valorPagamento = valorTotal;
 	}
 
 	public String getMetodoPagamento() {
@@ -74,26 +84,5 @@ public class Financeiro {
 		this.observacoes = observacoes;
 	}
 
-	private Integer idTrasacao;
-    private Integer idPedido;
-    private Integer idCliente;
-    private String dataHora;
-    private double valorTotal;
-    private String metodoPagamento;
-    private String statusPagamento;
-    private String tipoPedido;
-    private String observacoes;
-
-    public Financeiro(Integer idTrasacao, Integer idPedido, Integer idCliente, String dataHora, double valorTotal, String metodoPagamento, String statusPagamento, String tipoPedido, String observacoes) {
-        this.idTrasacao = idTrasacao;
-        this.idPedido = idPedido;
-        this.idCliente = idCliente;
-        this.dataHora = dataHora;
-        this.valorTotal = valorTotal;
-        this.metodoPagamento = metodoPagamento;
-        this.statusPagamento = statusPagamento;
-        this.tipoPedido = tipoPedido;
-        this.observacoes = observacoes;
-    }
 
 }
