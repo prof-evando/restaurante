@@ -13,8 +13,12 @@ public class ConexaoBD {
 		private ConexaoBD () {
 			
 			try {
+				Class.forName("oracle.jdbc.OracleDriver");
 				String url = "jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL";
 				conn = DriverManager.getConnection(url, PropriedadesConexao.obterPropriedades());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

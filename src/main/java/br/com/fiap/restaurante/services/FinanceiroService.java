@@ -1,77 +1,67 @@
 package br.com.fiap.restaurante.services;
 
 import br.com.fiap.restaurante.exceptions.FinanceiroException;
-import br.com.fiap.restaurante.model.EnumFinanceiro;
-import br.com.fiap.restaurante.model.FinanceiroDAO;
-import br.com.fiap.restaurante.model.Pedido_Financeiro;
-import br.com.fiap.restaurante.util.ConexaoBD;
+import br.com.fiap.restaurante.model.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
 public class FinanceiroService {
-    private FinanceiroDAO financeiroDAO;
+    private final FinanceiroDAO financeiroDAO;
+    private final PedidoDAOImpl pedidoDAO = new PedidoDAOImpl();
 
-    public FinanceiroService() {
-        financeiroDAO = new FinanceiroDAO();
+    public FinanceiroService(FinanceiroDAO financeiroDAO) {
+        this.financeiroDAO = financeiroDAO;
     }
+    
+    public void realizarPagamento(Financeiro financeiro, String tipoPagamento) throws FinanceiroException {
+    	
+    	
+        Pedido pedido = new Pedido(financeiro.getIdPedido(),financeiro.getObservacoes(), financeiro.getValorPagamento()); 
+    	
+        
+        if(tipoPagamento.contains("P")) {
 
-    public void realizarPagamentoPresencial(double valorPagamento, Pedido_Financeiro pedido,EnumFinanceiro.MetodoPagamento metodoPagamentoEnum, String observacoes) throws FinanceiroException {
+            if (financeiro.getValorPagamento() < 0) {
+                throw new FinanceiroException("O valor do pagamento não pode ser negativo.");
+            }
+            double troco = financeiro.getValorPagamento() - pedido.getValorTotal();
 
-        if (valorPagamento < 0) {
-            throw new FinanceiroException("O valor do pagamento não pode ser negativo.");
+            if (troco < 0) {
+                throw new FinanceiroException("Valor insuficiente para realizar o pagamento. Está faltando: R$" + troco*-1);
+            }
+
+            String statusPagamento = EnumFinanceiro.StatusPagamento.CONCLUIDO.getCodigo();
+            String metodoPagamento = EnumFinanceiro.MetodoPagamento.fromCodigo(financeiro.getMetodoPagamento()).getCodigo();
+
+            financeiroDAO.registrarTransacao(pedido.getNumero(), financeiro.getValorPagamento() , metodoPagamento, statusPagamento, tipoPagamento, 0, financeiro.getObservacoes());
         }
-        double troco = valorPagamento - pedido.getValor_total();
+        
+        else if(tipoPagamento.contains("D")) {
+        	if (financeiro.getIdCliente() == null) {
+                throw new FinanceiroException("ID do cliente é obrigatório para pedidos do tipo 'Delivery'.");
+            }
+        	
+            String statusPagamento = EnumFinanceiro.StatusPagamento.PENDENTE.getCodigo();
+            String metodoPagamento = EnumFinanceiro.MetodoPagamento.fromCodigo(financeiro.getMetodoPagamento()).getCodigo();
 
-        if (troco < 0) {
-            throw new FinanceiroException("Valor insuficiente para realizar o pagamento. Está faltando: R$" + troco*-1);
+            financeiroDAO.registrarTransacao(pedido.getNumero(), pedido.getValorTotal(), metodoPagamento, statusPagamento, tipoPagamento, financeiro.getIdCliente(), financeiro.getObservacoes());
         }
 
-        System.out.println("Pagamento realizado com sucesso! Troco: " + troco);
-
-        String statusPagamento = EnumFinanceiro.StatusPagamento.PENDENTE.getCodigo();
-        String tipoPedido = EnumFinanceiro.TipoPedido.PRESENCIAL.getCodigo();
-        String metodoPagamento = metodoPagamentoEnum.getCodigo();
-
-        financeiroDAO.registrarTransacao(pedido, metodoPagamento, statusPagamento, tipoPedido, null, observacoes);
     }
 
-    public void aguardarPagamentoDelivery(Pedido_Financeiro pedido, EnumFinanceiro.MetodoPagamento metodoPagamentoEnum, Integer idCliente, String observacoes) throws FinanceiroException {
+    public void atualizarDelivery(String status,Integer codPedido, String observacoes) throws FinanceiroException {
+    	try {
+           String statusAtual = financeiroDAO.buscarStatusTransacao(codPedido);
+           EnumFinanceiro.StatusPagamento novoStatus = EnumFinanceiro.StatusPagamento.fromCodigo(status);
+      	
+          verificarMudancaDeStatus(statusAtual,novoStatus);
 
-        if (idCliente == null) {
-            throw new FinanceiroException("ID do cliente é obrigatório para pedidos do tipo 'Delivery'.");
-        }
-        System.out.println("Pagamento realizado para o cliente com ID: " + idCliente);
+          financeiroDAO.atualizarTrasacao(novoStatus, codPedido, observacoes);
+    	}catch(FinanceiroException e) {
+    		throw new RuntimeException(e);
+    	}
+  }
 
-
-        String tipoPedido = EnumFinanceiro.TipoPedido.DELIVERY.getCodigo();
-        String statusPagamento = EnumFinanceiro.StatusPagamento.PENDENTE.getCodigo();
-        String metodoPagamento = metodoPagamentoEnum.getCodigo();
-
-        financeiroDAO.registrarTransacao(pedido, metodoPagamento, statusPagamento, tipoPedido, idCliente, observacoes);
-    }
-
-    public void finalizarPagamentoDelivery(double valorPagamento, Pedido_Financeiro pedido, String observacoes) throws FinanceiroException {
-
-        String statusAtual = financeiroDAO.buscarStatusTransacao(pedido.getCod_pedido());
-        EnumFinanceiro.StatusPagamento novoStatus = EnumFinanceiro.StatusPagamento.CONCLUIDO;
-
-        verificarMudancaDeStatus(financeiroDAO.buscarStatusTransacao(pedido.getCod_pedido()),novoStatus);
-
-        financeiroDAO.atualizarTrasacao(EnumFinanceiro.StatusPagamento.CONCLUIDO, valorPagamento, pedido, observacoes);
-    }
-
-    public void cancelarPagamentoDelivery(Pedido_Financeiro pedido, String observacoes) throws FinanceiroException {
-
-        String statusAtual = financeiroDAO.buscarStatusTransacao(pedido.getCod_pedido());
-        EnumFinanceiro.StatusPagamento novoStatus = EnumFinanceiro.StatusPagamento.CANCELADO;
-
-        verificarMudancaDeStatus(financeiroDAO.buscarStatusTransacao(pedido.getCod_pedido()),novoStatus);
-
-        financeiroDAO.atualizarTrasacao(EnumFinanceiro.StatusPagamento.CANCELADO,0, pedido, observacoes);
-    }
 
     public void verificarMudancaDeStatus(String statusAtual, EnumFinanceiro.StatusPagamento novoStatus) throws FinanceiroException {
         if ((statusAtual.equals(EnumFinanceiro.StatusPagamento.CONCLUIDO.getCodigo()) && novoStatus.equals(EnumFinanceiro.StatusPagamento.CANCELADO)) ||
@@ -79,5 +69,22 @@ public class FinanceiroService {
             throw new FinanceiroException("Não é permitido alterar o status de 'Concluído' para 'Cancelado' ou vice-versa.");
         }
     }
+
+    public List<Financeiro> buscarTransacoes(String status){
+        try {
+            return financeiroDAO.buscarTransacoes(status);
+        } catch (FinanceiroException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Financeiro buscarTransacao(Integer codPedido) throws FinanceiroException {
+        try{
+            return financeiroDAO.buscarTransacaoPorPedido(codPedido);
+        } catch (FinanceiroException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

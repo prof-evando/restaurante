@@ -31,11 +31,16 @@
             <artifactId>jersey-hk2</artifactId>
         </dependency>
 
-        <!-- uncomment this to get JSON support
+        <!-- uncomment this to get JSON support-->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>
-        </dependency> -->
+        </dependency> 
+          <dependency>
+		      <groupId>jakarta.activation</groupId>
+		      <artifactId>jakarta.activation-api</artifactId>
+		      <version>2.0.1</version>
+		  </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty.ee10</groupId>

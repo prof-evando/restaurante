@@ -23,31 +23,6 @@ public class EstabelecimentoDAOImpl implements EstabelecimentoDAO {
 			e.printStackTrace();
 		}
 	}
-	@Override
-	public void criarTabelaEstabelecimento() {
-		String tabelaQuery = "SELECT TABLE_NAME FROM ALL_TABLES WHERE TABLE_NAME = 'ESTABELECIMENTO'";
-	    String sql = "CREATE TABLE ESTABELECIMENTO (" +
-	                 "endereco_Id NUMBER NOT NULL, " +
-	                 "nome VARCHAR2(50) NOT NULL, " +
-	                 "tel VARCHAR2(20) NOT NULL," + 
-	                 "CONSTRAINT pk_estabelecimento_nome PRIMARY KEY(nome)," +
-	                 "CONSTRAINT fk_endereco_estabelecimento FOREIGN KEY (endereco_Id) REFERENCES ENDERECO(id))";
-	                
-
-	    try (Statement stmt = conn.createStatement();
-	         ResultSet rs = stmt.executeQuery(tabelaQuery)) {
-	        
-	        if (!rs.next()) { 
-	            stmt.executeUpdate(sql);
-	            System.out.println("Tabela ESTABELECIMENTO criada com sucesso.");
-	        } else {
-	            System.out.println("A tabela ESTABELECIMENTO já existe.");
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-
-	}
 
 	@Override
 	public void incluirEstabelecimento(Endereco endereco, Estabelecimento estabelecimento) {
